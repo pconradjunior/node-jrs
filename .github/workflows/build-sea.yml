@@ -1,0 +1,59 @@
+name: Build SEA binaries
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    env:
+      SEA_BINARY: json-rest-server
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm install
+
+      - name: Build SEA binary
+        run: npm run build
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: json-rest-server-${{ matrix.os }}
+          path: dist/json-rest-server*
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+
+      - name: Rename binaries per OS
+        shell: bash
+        run: |
+          cd artifacts
+          mv json-rest-server-linux  json-rest-server-linux
+          chmod +x json-rest-server-linux 2>/dev/null || true
+          mv json-rest-server.exe json-rest-server-win.exe 2>/dev/null || true
+          mv json-rest-server      json-rest-server-macos 2>/dev/null || true
+
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: artifacts/*
+          draft: false
+          prerelease: false

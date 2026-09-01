@@ -1,0 +1,45 @@
+{
+  "name": "json-rest-server",
+  "version": "1.0.0",
+  "description": "A RESTful server based on JSON. Fully functional RESTful server with auth, pagination, upload and broadcast for development and prototyping.",
+  "main": "bin/jrs.js",
+  "bin": {
+    "json-rest-server": "bin/jrs.js",
+    "jsonRestServer": "bin/jrs.js",
+    "jrs": "bin/jrs.js"
+  },
+  "scripts": {
+    "start": "node bin/jrs.js run",
+    "create": "node bin/jrs.js create",
+    "test": "node --test test/*.test.js",
+    "test:coverage": "node --experimental-test-coverage --test test/*.test.js",
+    "build": "node scripts/build-sea.js"
+  },
+  "keywords": [
+    "rest",
+    "server",
+    "json",
+    "mock",
+    "api",
+    "jwt",
+    "websocket"
+  ],
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "commander": "^12.1.0",
+    "express": "^4.21.2",
+    "js-yaml": "^4.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^1.4.5-lts.1",
+    "uuid": "^9.0.1",
+    "ws": "^8.18.1"
+  },
+  "devDependencies": {
+    "esbuild": "^0.24.0",
+    "postject": "^1.0.0-alpha.6",
+    "supertest": "^7.0.0"
+  }
+}
