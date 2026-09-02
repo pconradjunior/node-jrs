@@ -1,68 +1,88 @@
 # json-rest-server
 
-A fully functional RESTful server based on JSON, for development and
-prototyping. **Node.js port of the Dart
-[`json_rest_server`](https://github.com/rodrigorahman/json_rest_server)**,
-keeping drop-in compatibility with its `config.yaml` / `database.json` format.
+Um servidor RESTful totalmente funcional baseado em JSON, para desenvolvimento e
+prototipagem. **Port para Node.js do
+[`json_rest_server`](https://github.com/rodrigorahman/json_rest_server) (Dart)**,
+mantendo compatibilidade total com o formato de `config.yaml` / `database.json`
+do original.
 
-Works as an npm package **and** as a standalone cross-platform executable
-(built with Node SEA).
+Funciona como pacote npm **e** como executável standalone multiplataforma
+(construído com Node SEA).
 
-## Requirements
+## Requisitos
 - Node.js >= 20
 
-## Install
+## Instalação
 ```bash
 npm install -g json-rest-server
 ```
 
-## Quick start
+## Início rápido
 ```bash
-# 1. Generate config.yaml, database.json and the storage/ folder
+# 1. Gera config.yaml, database.json e a pasta storage/
 json-rest-server create
 
-# 2. Start the server (defaults to http://0.0.0.0:8080)
+# 2. Inicia o servidor (padrão http://0.0.0.0:8080)
 json-rest-server run
-# or just: json-rest-server
+# ou simplesmente: json-rest-server
 ```
 
-- `create` generates a `database.json` with sample collections: `users`,
-  `adm_users`, `categories` and `products`.
-- **Storage route:** files uploaded via `POST /uploads` are stored and served
-  at `GET /storage/<filename>`.
-- **Broadcast:** with `enableSocket: true`, write operations (POST/PUT/PATCH/DELETE)
-  are pushed as `{channel, table, data}` over TCP (default `:8081`) and/or WebSocket.
+- `create` gera um `database.json` com coleções de exemplo: `users`,
+  `adm_users`, `categories` e `products`.
+- **Rota de storage:** os arquivos enviados via `POST /uploads` são armazenados
+  e servidos em `GET /storage/<filename>`.
+- **Broadcast:** com `enableSocket: true`, as operações de escrita
+  (POST/PUT/PATCH/DELETE) são enviadas como `{channel, table, data}` via TCP
+  (padrão `:8081`) e/ou WebSocket.
 
 ## CLI
-| Command | Description |
+| Comando | Descrição |
 |---|---|
-| `create` | Generate initial `config.yaml`, `database.json` and `storage/` |
-| `run` | Start the server |
-| `--debug` / `-d` | Enable verbose request logging |
+| `create` | Gera `config.yaml`, `database.json` e `storage/` iniciais |
+| `run` | Inicia o servidor |
+| `--debug` / `-d` | Ativa logs de debug detalhados (ex.: auth, persistência, eventos de socket) |
 
-## Configuration
-All behaviour is controlled by `config.yaml` (see the generated template).
-Environment variables override it:
+## Log de requisições
 
-| Env | Effect |
-|---|---|
-| `PORT` | HTTP port |
-| `HOST` | Listen host |
-| `DATABASE_PATH` | Path to the JSON database file |
-| `JWT_SECRET` | Override `auth.jwtSecret` |
+Enquanto o servidor está em execução, cada chamada a um endpoint é registrada
+com o método HTTP, o caminho, o código de status e a duração — acompanhando o
+comportamento sempre ativo do `logRequests()` do servidor Dart original:
 
-## Development
-
-### Running without global install
-
-```bash
-# From the project root
-npm install          # install deps (once)
-npm start            # equivalent to: node bin/jrs.js run
-npm create           # equivalent to: node bin/jrs.js create <dir>
+```
+[JSON Go Server] Server started on http://127.0.0.1:8080
+[POST] /auth -> 200 (3ms)
+[GET] /products -> 200 (1ms)
+[GET] /products/999 -> 404 (0ms)
 ```
 
-Or directly with Node:
+O log de requisições está **ativo por padrão** (não precisa de flag). A flag
+`--debug`/`-d` apenas adiciona linhas mais detalhadas (auth, persistência,
+eventos de socket); ela não controla o log de requisições. Se precisar silenciá-lo,
+o logger oferece um modo `quiet` — veja `src/util/logger.js`.
+
+## Configuração
+Todo o comportamento é controlado pelo `config.yaml` (veja o template gerado).
+Variáveis de ambiente o sobrescrevem:
+
+| Env | Efeito |
+|---|---|
+| `PORT` | Porta HTTP |
+| `HOST` | Host de escuta |
+| `DATABASE_PATH` | Caminho para o arquivo JSON do banco |
+| `JWT_SECRET` | Sobrescreve `auth.jwtSecret` |
+
+## Desenvolvimento
+
+### Executar sem instalação global
+
+```bash
+# A partir da raiz do projeto
+npm install          # instala as dependências (uma vez)
+npm start            # equivalente a: node bin/jrs.js run
+npm run create       # equivalente a: node bin/jrs.js create <dir>
+```
+
+Ou diretamente com Node:
 
 ```bash
 node bin/jrs.js run
@@ -72,71 +92,99 @@ node bin/jrs.js create ./minha-pasta
 ### Testes
 
 ```bash
-npm test                 # run node:test suite
-npm run test:coverage    # with coverage report
+npm test                 # executa a suíte node:test
+npm run test:coverage    # com relatório de cobertura
 ```
 
 ### Workflow típico de desenvolvimento
 
-1. `npm create ./meu-projeto` — gera config, database e pasta storage
+1. `npm run create ./meu-projeto` — gera config, database e pasta storage
 2. `cd ./meu-projeto`
 3. `npm start` — sobe o servidor com hot-reload possível via `nodemon` (não incluso, mas `node bin/jrs.js run` pode ser observado por ferramentas externas)
 4. `npm test` — validações rápidas do comportamento
 5. `npm run build` — gera binários standalone (Windows/macOS/Linux) via Node SEA
 
-### Depuracao
+### Depuração
 
-- Use a flag `--verbose` ou `-d` para ver logs de request (metodo, path, status, duracao) no console.
-- Logs detalhados podem ser ativados via config `log: true` (futuro) ou inspecionando `src/util/logger.js`.
+- Cada requisição é logada por padrão como `[METHOD] /path -> status (duração)`
+  no console (ex.: `[GET] /products -> 200 (1ms)`), sem precisar de flag.
+- Use `--debug` / `-d` para logs mais detalhados (auth, persistência, socket, erros).
+- Veja `src/util/logger.js` para customização dos níveis de log.
 
-## Configuration
-All behaviour is controlled by `config.yaml` (see the generated template).
-Environment variables override it:
+## Autenticação
 
-| Env | Effect |
-|---|---|
-| `PORT` | HTTP port |
-| `HOST` | Listen host |
-| `DATABASE_PATH` | Path to the JSON database file |
-| `JWT_SECRET` | Override `auth.jwtSecret` |
+**Ativada por padrão** no `config.yaml` gerado por `create` (o bloco `auth:` é
+pré-preenchido com um `jwtSecret`). Você pode desativá-la comentando o bloco
+`auth:` — observe que `POST /auth` então retornará um erro claro em vez de um
+token.
 
-## Auth
+- `POST /auth` com `{email, password}` (ou `+ admin: true` para `adm_users`)
+  retorna `{access_token, refresh_token, type}`.
+- `PUT /auth/refresh` troca um refresh token (`nbf = jwtExpire`).
+- `GET /me` retorna o usuário logado sem o campo `password`.
+- Rotas protegidas exigem `Authorization: Bearer <token>`.
+- `auth.urlSkip` e `urlUserPermission` controlam quais rotas não precisam de
+  token e quais escritas um usuário comum pode realizar. `enableAdm` restringe
+  escritas a administradores.
 
-**Enabled by default** in the `config.yaml` generated by `create` (the `auth:`
-block is pre-filled with a `jwtSecret`). You can disable it by commenting out
-the `auth:` block — note that `POST /auth` will then return a clear error
-instead of a token.
+> **Dica (Postman):** depois de ativar a autenticação, execute a requisição
+> *Login* e copie o `access_token` retornado para a variável `{{token}}` da
+> coleção, para que as requisições autenticadas funcionem.
 
-- `POST /auth` with `{email, password}` (or `+ admin: true` for `adm_users`)
-  returns `{access_token, refresh_token, type}`.
-- `PUT /auth/refresh` exchanges a refresh token (`nbf = jwtExpire`).
-- `GET /me` returns the logged user without the `password` field.
-- Protected routes require `Authorization: Bearer <token>`.
-- `auth.urlSkip` and `urlUserPermission` control which routes need no token
-  and which writes a regular user may perform. `enableAdm` restricts writes to admins.
+## Paginação
+Adicione `?page=` a um GET de coleção para receber
+`{data, total, page, limit, totalPages}`. Sem isso, o array bruto é retornado.
 
-> **Tip (Postman):** after enabling auth, run the *Login* request and copy the
-> returned `access_token` into the collection `{{token}}` variable so the
-> authenticated requests work.
+## Construir o executável standalone
 
-## Pagination
-Add `?page=` to a collection GET to receive
-`{data, total, page, limit, totalPages}`. Without it, the raw array is returned.
+O projeto gera um **binário autocontido** (Single Executable Application via
+Node SEA) que roda sem precisar de `node_modules` ou da flag
+`--experimental-sea-config`. Ele já traz todo o runtime do Node embutido e o
+código do servidor empacotado por `esbuild`.
 
-## Building the standalone executable
 ```bash
 npm install
 npm run build
-# outputs dist/json-rest-server(.exe)
+# gera dist/json-rest-server(.exe)
 ```
-Cross-platform binaries are built automatically on tag push via
-`.github/workflows/build-sea.yml`.
 
-## Tests
+### Dicas de uso do binário
+
+- **Onde sai:** `dist/json-rest-server` (`.exe` no Windows; sem extensão no
+  macOS/Linux).
+- **É autocontido:** pode ser copiado para outra máquina que **não** precisa ter
+  o Node.js instalado nem as dependências do projeto. Basta colocar `config.yaml`
+  e `database.json` em uma pasta e rodar.
+- **Uso idêntico ao CLI em Node:** as mesmas variáveis de ambiente (`PORT`,
+  `HOST`, `DATABASE_PATH`, `JWT_SECRET`) e flags (`run`, `create`, `--debug`)
+  funcionam no binário.
+
 ```bash
-npm test                 # run node:test suite
-npm run test:coverage    # with coverage report
+# Copie o binário para uma pasta vazia e inicialize o projeto
+./json-rest-server create
+./json-rest-server run
 ```
 
-## License
+- **Build multiplataforma:** cada sistema operacional gera seu próprio binário —
+  rode `npm run build` no Windows, macOS e Linux para obter cada versão.
+- **CI automática:** os binários para as três plataformas são construídos
+  automaticamente no push de tags via `.github/workflows/build-sea.yml` e
+  publicados como *release*.
+
+## Licença
 Apache-2.0
+
+## Créditos
+
+- **Autor original (Dart):** [Rodrigo Rahman](https://github.com/rodrigorahman) —
+  criador do [`json_rest_server`](https://github.com/rodrigorahman/json_rest_server).
+- **Port para Node.js:** [Pedro Conrad Junior](https://github.com/pconradjunior) —
+  este port foi construído utilizando o **OpenCode** como assistente de IA e o
+  **Agente Petrux** como orquestrador/organizador do fluxo de desenvolvimento.
+
+## Aviso de BETA
+Este projeto é um port BETA do `json_rest_server` original em Dart. Embora tenha sido testado, pode conter bugs ou diferenças de comportamento em relação ao original. Use com cautela mesmo em ambientes de desenvolvimento e **NÃO USE em ambientes de produção**.
+
+## Disclaimer
+Este projeto é fornecido "no estado em que se encontra", sem garantias de qualquer tipo, expressas ou implícitas. O uso é de responsabilidade do usuário. O autor não se responsabiliza por quaisquer danos ou perdas decorrentes do uso deste software.
+
