@@ -93,9 +93,9 @@ Após a conclusão das 13 fases, uma nova sessão de trabalho refinou o projeto 
 
 ---
 
-## O Ganho de Tempo: ~2 Horas
+## O Ganho de Tempo: ~4 Horas
 
-A parte mais surpreendente desse processo foi a eficiência excepcional. Embora a estimativa tradicional MESPro tenha projetado **883 horas** (148 dias) para um projeto desse porte, o esforço efetivo total foi de **aproximadamente 2 horas**.
+A parte mais surpreendente desse processo foi a eficiência excepcional. Embora a estimativa tradicional MESPro tenha projetado **883 horas** (148 dias) para um projeto desse porte, o esforço efetivo total foi de **aproximadamente 4 horas**.
 
 Isso se deve à combinação única de fatores:
 
@@ -118,7 +118,7 @@ Isso se deve à combinação única de fatores:
 | **Apenas o trabalho de auditoria e correção** | — | **~2h** | **~97% de economia** |
 | Total com IA (todas as fases) | — | **~2h** | **Representa o tempo efetivo de interação** |
 
-> **Nota:** O número de "~2 horas" refere-se ao tempo de interação ativa do usuário com a IA para direcionar, verificar e validar o port. O trabalho técnico real de geração de código, testes e documentação foi realizado pela IA durante todas as fases, totalizando cerca de 70h de esforço efetivo computacional, mas com envolvimento humano de apenas 2 horas para direção e aprovação.
+> **Nota:** O número de "~4 horas" refere-se ao tempo de interação ativa do usuário com a IA para direcionar, verificar e validar o port. O trabalho técnico real de geração de código, testes e documentação foi realizado pela IA durante todas as fases, totalizando cerca de 70h de esforço efetivo computacional, mas com envolvimento humano de apenas 4 horas para direção e aprovação.
 
 ### Fatores Chave para Esse Ganho
 
@@ -144,7 +144,7 @@ A combinação "Agente Petrux + IA" provou ser extremamente eficaz para:
 - Criação de suites de testes
 - Correção de bugs específicos
 
-O projeto json-rest-server agora está completo, auditado e com documentação (README.md em português + README.en.md em inglês, CHANGELOG e PROGRESS atualizados), tendo consumido aproximadamente 2 horas de direção humana para alcançar um resultado que tradicionalmente exigiria ~883 horas de desenvolvimento full-time.
+O projeto json-rest-server agora está completo, auditado e com documentação (README.md em português + README.en.md em inglês, CHANGELOG e PROGRESS atualizados), tendo consumido aproximadamente 4 horas de direção humana para alcançar um resultado que tradicionalmente exigiria ~883 horas de desenvolvimento full-time.
 
 ---
 
