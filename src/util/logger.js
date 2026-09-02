@@ -28,7 +28,7 @@ function error(...args) {
 }
 
 function requestLog(req, status, durationMs) {
-  if (!verbose || quiet) return;
+  if (quiet) return;
   console.log(
     `[request] ${req.method} ${req.originalUrl} -> ${status} (${durationMs}ms)`
   );

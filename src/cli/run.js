@@ -7,7 +7,6 @@ const { resolveBaseDir, buildPaths } = require('../util/paths');
 const { JsonRestServer } = require('../server/json-rest-server');
 const { DatabaseLoadError } = require('../db/database');
 const { printAccessUrls } = require('../util/net');
-const { printBanner } = require('../util/banner');
 
 async function runServer(targetDir) {
   const baseDir = targetDir ? path.resolve(process.cwd(), targetDir) : resolveBaseDir();
@@ -26,8 +25,6 @@ async function runServer(targetDir) {
   }
 
   applyEnvOverrides(config);
-
-  printBanner(config);
 
   if (config.database && config.database !== 'database.json') {
     paths.databasePath = require('path').resolve(baseDir, config.database);
