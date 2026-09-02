@@ -1,14 +1,16 @@
 'use strict';
 
+const path = require('path');
 const { loadConfig, ConfigLoadError } = require('../config/config-loader');
 const { applyEnvOverrides } = require('../config/env');
 const { resolveBaseDir, buildPaths } = require('../util/paths');
 const { JsonRestServer } = require('../server/json-rest-server');
 const { DatabaseLoadError } = require('../db/database');
 const { printAccessUrls } = require('../util/net');
+const { printBanner } = require('../util/banner');
 
-async function runServer() {
-  const baseDir = resolveBaseDir();
+async function runServer(targetDir) {
+  const baseDir = targetDir ? path.resolve(process.cwd(), targetDir) : resolveBaseDir();
   const paths = buildPaths(baseDir);
 
   let config;
@@ -24,6 +26,8 @@ async function runServer() {
   }
 
   applyEnvOverrides(config);
+
+  printBanner(config);
 
   if (config.database && config.database !== 'database.json') {
     paths.databasePath = require('path').resolve(baseDir, config.database);

@@ -26,16 +26,17 @@ function run(argv) {
   program
     .command('run')
     .description('Start the server (default behavior)')
-    .action(() => {
+    .argument('[dir]', 'directory containing config.yaml and database.json (default: current)')
+    .action((dir) => {
       logger.configure({ verbose: program.opts().debug });
-      require('./run').runServer();
+      require('./run').runServer(dir);
     });
 
   program.parse(argv);
 
   if (argv.slice(2).length === 0 || argv.slice(2).every((a) => a.startsWith('-'))) {
     logger.configure({ verbose: program.opts().debug });
-    require('./run').runServer();
+    require('./run').runServer(undefined);
   }
 }
 
