@@ -70,6 +70,29 @@ A assistência de IA esteve presente em todas as fases críticas do fluxo Petrux
 
 ---
 
+## Sessão Pós-Publicação: Log de Requisições e Documentação (2026-09-02)
+
+Após a conclusão das 13 fases, uma nova sessão de trabalho refinou o projeto e ampliou a documentação:
+
+### Log de Requisições (paridade com o Dart)
+
+- O port Node já possuía infraestrutura de log (`src/middleware/logging.js` + `src/util/logger.js`), mas o `requestLog()` era limitado pela flag `-d/--debug`. No Dart original, o `logRequests()` do pacote `shelf` é adicionado **incondicionalmente** no pipeline, logando toda requisição.
+- **Alteração:** removido o gate de `verbose` do `requestLog()`, mantendo apenas `quiet`. Agora toda requisição é logada durante `run`, sem flag — paridade exata com o comportamento do Dart.
+- **Formato:** de `[request] METHOD /path -> STATUS (Nms)` para `[METHOD] /path -> STATUS (Nms)` (ex.: `[POST] /auth -> 500 (2ms)`).
+
+### Documentação
+
+- **README.md** traduzido integralmente para o português, com seções atualizadas: log de requisições, build autocontido (Node SEA) com dicas de uso do binário, créditos, aviso de BETA e disclaimer.
+- **README.en.md** criado com a versão em inglês correspondente.
+- **CHANGELOG.md** atualizado com o entry `[Unreleased]` documentando as mudanças.
+- **PROGRESS.md** atualizado com a sessão 2026-09-02 e acentuação corrigida.
+
+### Validação
+
+- `npm test` — **31 testes passando**; a própria suíte confirma as linhas `[GET] /products -> 200 (2ms)` impressas por padrão.
+
+---
+
 ## O Ganho de Tempo: ~2 Horas
 
 A parte mais surpreendente desse processo foi a eficiência excepcional. Embora a estimativa tradicional MESPro tenha projetado **883 horas** (148 dias) para um projeto desse porte, o esforço efetivo total foi de **aproximadamente 2 horas**.
@@ -121,7 +144,7 @@ A combinação "Agente Petrux + IA" provou ser extremamente eficaz para:
 - Criação de suites de testes
 - Correção de bugs específicos
 
-O projeto json-rest-server agora está completo, auditado e comdocumentação, tendo consumido aproximadamente 2 horas de direção humana para alcançar um resultado que tradicionalmente exigiria ~883 horas de desenvolvimento full-time.
+O projeto json-rest-server agora está completo, auditado e com documentação (README.md em português + README.en.md em inglês, CHANGELOG e PROGRESS atualizados), tendo consumido aproximadamente 2 horas de direção humana para alcançar um resultado que tradicionalmente exigiria ~883 horas de desenvolvimento full-time.
 
 ---
 
