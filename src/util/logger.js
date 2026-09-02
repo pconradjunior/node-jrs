@@ -30,7 +30,7 @@ function error(...args) {
 function requestLog(req, status, durationMs) {
   if (quiet) return;
   console.log(
-    `[request] ${req.method} ${req.originalUrl} -> ${status} (${durationMs}ms)`
+    `[${req.method}] ${req.originalUrl} -> ${status} (${durationMs}ms)`
   );
 }
 
